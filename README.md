@@ -10,3 +10,5 @@
 
 你可以上作者的github上体验这款游戏: [Minor_Miner](https://ramorris3.github.io/minor-miner)
 
+因为我的英文太差无法与作者沟通。
+
