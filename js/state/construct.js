@@ -13,9 +13,6 @@ Demo.construcState.prototype = {
         };
 
         //init map set;
-        //this.caveMap = this.game.add.tilemap();
-        //this.wallMap = this.game.add.tilemap();
-        //this.cementMap = this.game.add.tilemap();
         this.caveMap = new Array(Demo.CaveAry.length);
         this.wallMap = new Array(Demo.WallAry.length);
         this.cementMap = new Array(Demo.CementAry.length);
@@ -24,31 +21,16 @@ Demo.construcState.prototype = {
         this.initMap(this.wallMap,Demo.WallAry);
         this.initMap(this.cementMap,Demo.CementAry);
 
-        //this.initTileImg(this.caveMap,Demo.CaveAry);
-        //this.initTileImg(this.wallMap,Demo.WallAry);
-        //this.initTileImg(this.cementMap,Demo.CementAry);
-
         this.caveLayer = this.caveMap[0].create(Demo.CaveAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
         this.caveLayer.resizeWorld();
 
         this.wallLayer = this.wallMap[0].create(Demo.WallAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
 
         this.cementLayer = this.cementMap[0].create(Demo.CementAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
-        //this.cementLayer.resizeWorld();
-        //this.caveMap[0].setCollisionBetween(1, 2000, true, Demo.CaveAry[0]);
-        this.wallMap[0].setCollisionBetween(1, 2000, true, Demo.WallAry[0]);
-        this.cementMap[0].setCollisionBetween(1, 2000, true, Demo.CementAry[0]);
 
-        //this.wallMap[0].putTile(1,1,1,this.wallLayer);
-        //this.wallMap[1].putTile(1,10,10,this.wallLayer);
-        //this.wallMap[2].putTile(1,20,20,this.wallLayer);
-        //this.wallMap[2].putTile(1,30,30,this.wallLayer);
-        //this.wallMap.putTile(1,10,10,this.wallLayer);
-        //this.cementMap.putTile(2,20,20,this.cementLayer);
-        //this.cementMap.putTile(3,30,30,this.caveLayer);
-        //this.map.putTile(2,2,3,this.testLayer);
-        //this.map.putTile(3,2,4,this.testLayer);
-        //this.cementLayer.resizeWorld();
+        this.wallMap[0].setCollisionBetween(0, 2000, true, Demo.WallAry[0]);
+        this.cementMap[0].setCollisionBetween(0, 2000, true, Demo.CementAry[0]);
+
 
         //create player
         this.input = new Demo.Input(this.game);
@@ -64,30 +46,40 @@ Demo.construcState.prototype = {
 
         for(var i=0;i<Demo.TILE_ROW_NUM;i++)
         {
-            this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(-1);
+            if(i<Demo.TILE_ROW_NUM - 4){
+                this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(0);
+            }
+            else
+            {
+                this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(1);
+            }
+            //this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(0);
             this.tileAry[i] = new Array(Demo.TILE_COL_NUM);
         }
 
         for(var i=0;i<Demo.TILE_ROW_NUM;i++){
             for(var j=0;j<Demo.TILE_COL_NUM;j++){
                 //var tileSprite;
-                //this.createTile(i,j);
+                this.createTile(i,j);
             }
         } 
 
         //Tools Box
         this.BoxPosition = new Phaser.Point(this.game.world.centerX,this.game.world.centerY);
-         // 创建一个bitmap对象
-        BtnBox= this.game.add.bitmapData(128,128);
+        // 创建一个bitmap对象
+        var boxWidth = 128
+        var boxHeight = 512
+
+        BtnBox= this.game.add.bitmapData(boxWidth,boxHeight);
         // 使用Canvas的api进行绘制
         BtnBox.ctx.beginPath();
 
         BtnBox.ctx.fillStyle = '#A0A0A0';
-        BtnBox.ctx.fillRect(0,0,220,128);
+        BtnBox.ctx.fillRect(0,0,boxWidth,boxHeight);
         BtnBox.ctx.fill();
 
         BtnBox.ctx.fillStyle = '#2020ff';
-        BtnBox.ctx.fillRect(0,0,220,20);
+        BtnBox.ctx.fillRect(0,0,boxWidth,20);
         BtnBox.ctx.fill();
 
         //BtnBox.ctx.rect(0, 0, 128, 128);
@@ -157,32 +149,31 @@ Demo.construcState.prototype = {
         //alert('hahah');
         var tileY = Math.ceil(mousePointer.x/Demo.TILE_SIZE_W) - 1;
         var tileX = Math.ceil(mousePointer.y/Demo.TILE_SIZE_H) - 1;
+
+        if(tileX<0 ||tileX > Demo.TILE_ROW_NUM - 1||tileY < 0 || tileY > Demo.TILE_COL_NUM - 1 )
+        {
+            return ;
+        }
         
         //this.sceneAry[tileX][tileY] = this.DrawType;
         if(this.sceneAry[tileX][tileY]!=this.DrawType)
         {
             var orginType = this.sceneAry[tileX][tileY];
             this.sceneAry[tileX][tileY] = this.DrawType;
-            //if(this.tileAry[tileX][tileY]){
-            //    var deSprite = this.tileAry[tileX][tileY];
-            //    //this.createTile(tileX,tileY);
-            //    if (deSprite)
-            //    {
-            //        //deSprite.destroy();
-            //        this.map.removeTile(tileX,tileY,deSprite.layer);
-            //    }
-            //};
+
             var deSprite = this.tileAry[tileX][tileY];
             if(deSprite)
             {
                 switch(orginType){
-                    case Demo.CAVE_VALUE:this.caveMap[0].removeTile(tileX,tileY,this.caveLayer);break;
-                    case Demo.WALL_VALUE:this.wallMap[0].removeTile(tileX,tileY,this.wallLayer);break;
-                    case Demo.CEMENT_VALUE:this.cementMap[0].removeTile(tileX,tileY,this.cementLayer);break;
+                    case Demo.CAVE_VALUE:this.caveMap[0].removeTile(tileY,tileX,this.caveLayer);break;
+                    case Demo.WALL_VALUE:this.wallMap[0].removeTile(tileY,tileX,this.wallLayer);break;
+                    case Demo.CEMENT_VALUE:this.cementMap[0].removeTile(tileY,tileX,this.cementLayer);break;
                 }
             }
             this.createTile(tileX,tileY);
+
         }
+        
 
         this.updateTile(tileX,tileY);
         this.updateTile(tileX - 1,tileY - 1);

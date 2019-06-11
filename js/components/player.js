@@ -88,7 +88,7 @@ Demo.Player = function(game, input, x, y) {
   this.drill.anchor.y = 0.5;
   this.drill.kill();
   this.drilling = false;
-  this.addChild(this.drill);
+  //this.addChild(this.drill);
   // drill charge UI
   this.maxDrillCharge = 25;
   this.drillCharge = this.maxDrillCharge;
