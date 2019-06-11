@@ -13,6 +13,8 @@ Demo.preloadState.prototype = {
         this.initTile(Demo.CaveAry);
         this.initTile(Demo.WallAry);
         this.initTile(Demo.CementAry);
+        this.load.spritesheet('Wall4', 'assets/tiles/Wall1.bmp', 16, 16,16);
+
         this.load.spritesheet('dust', 'assets/img/dust.png', 8, 8);
         this.load.spritesheet('player', 'assets/img/player.png', 16, 16, 16);
         this.load.spritesheet('player-speedo', 'assets/img/player-speedo.png', 16, 16, 16);

@@ -9,30 +9,69 @@ Demo.construcState.prototype = {
             player: this.game.add.group(),
             foreground: this.game.add.group(),
             effects: this.game.add.group(), // bullets and dust
-            ui: this.game.add.group(),
-
-            
+            ui: this.game.add.group(), 
         };
 
+        //init map set;
+        //this.caveMap = this.game.add.tilemap();
+        //this.wallMap = this.game.add.tilemap();
+        //this.cementMap = this.game.add.tilemap();
+        this.caveMap = new Array(Demo.CaveAry.length);
+        this.wallMap = new Array(Demo.WallAry.length);
+        this.cementMap = new Array(Demo.CementAry.length);
+        
+        this.initMap(this.caveMap,Demo.CaveAry);
+        this.initMap(this.wallMap,Demo.WallAry);
+        this.initMap(this.cementMap,Demo.CementAry);
 
+        //this.initTileImg(this.caveMap,Demo.CaveAry);
+        //this.initTileImg(this.wallMap,Demo.WallAry);
+        //this.initTileImg(this.cementMap,Demo.CementAry);
 
-        //init
+        this.caveLayer = this.caveMap[0].create(Demo.CaveAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
+        this.caveLayer.resizeWorld();
+
+        this.wallLayer = this.wallMap[0].create(Demo.WallAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
+
+        this.cementLayer = this.cementMap[0].create(Demo.CementAry[0],Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W , Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H, Demo.TILE_SIZE_W, Demo.TILE_SIZE_H);
+        //this.cementLayer.resizeWorld();
+        //this.caveMap[0].setCollisionBetween(1, 2000, true, Demo.CaveAry[0]);
+        this.wallMap[0].setCollisionBetween(1, 2000, true, Demo.WallAry[0]);
+        this.cementMap[0].setCollisionBetween(1, 2000, true, Demo.CementAry[0]);
+
+        //this.wallMap[0].putTile(1,1,1,this.wallLayer);
+        //this.wallMap[1].putTile(1,10,10,this.wallLayer);
+        //this.wallMap[2].putTile(1,20,20,this.wallLayer);
+        //this.wallMap[2].putTile(1,30,30,this.wallLayer);
+        //this.wallMap.putTile(1,10,10,this.wallLayer);
+        //this.cementMap.putTile(2,20,20,this.cementLayer);
+        //this.cementMap.putTile(3,30,30,this.caveLayer);
+        //this.map.putTile(2,2,3,this.testLayer);
+        //this.map.putTile(3,2,4,this.testLayer);
+        //this.cementLayer.resizeWorld();
+
+        //create player
+        this.input = new Demo.Input(this.game);
+        this.player = new Demo.Player(this.game, this.input, 100, 200);
+
+        //init Data
         this.DrawType = Demo.WALL_VALUE;
 
         Demo.TILE_COL_NUM = Math.ceil(Demo.SCREEN_WIDTH/Demo.TILE_SIZE_W);
         Demo.TILE_ROW_NUM = Math.ceil(Demo.SCREEN_HEIGHT/Demo.TILE_SIZE_H);
         this.sceneAry = new Array(Demo.TILE_COL_NUM);
         this.tileAry = new Array(Demo.TILE_COL_NUM);
+
         for(var i=0;i<Demo.TILE_ROW_NUM;i++)
         {
-            this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(0);
+            this.sceneAry[i] = new Array(Demo.TILE_COL_NUM).fill(-1);
             this.tileAry[i] = new Array(Demo.TILE_COL_NUM);
         }
 
         for(var i=0;i<Demo.TILE_ROW_NUM;i++){
             for(var j=0;j<Demo.TILE_COL_NUM;j++){
                 //var tileSprite;
-                this.createTile(i,j);
+                //this.createTile(i,j);
             }
         } 
 
@@ -73,10 +112,6 @@ Demo.construcState.prototype = {
         this.BtnCement.anchor.setTo(0.5, 0.5);
         this.BtnCement.scale.setTo(ButtonScale,ButtonScale)
 
-        //create player
-        this.input = new Demo.Input(this.game);
-        //var objects = this.findObjectsByType('playerStart', this.map, 'objectsLayer');
-        this.player = new Demo.Player(this.game, this.input, 100, 200);
         //this.player_drill = this.game.add.sprite(this.player)
         //this.player.bringToTop();
         //the camera will follow the player in the world
@@ -84,40 +119,69 @@ Demo.construcState.prototype = {
     },
 
     update: function(){
-
+        // stage collisions this.player2
+        //this.game.physics.arcade.collide(this.player, this.stageLayer);new Phaser.Point(this.game.world.centerX,this.game.world.centerY)
         this.game.debug.text( "("+Math.ceil(this.game.input.mousePointer.x/Demo.TILE_SIZE_W)+","+Math.ceil(this.game.input.mousePointer.y/Demo.TILE_SIZE_H)+")", 20, Demo.SCREEN_HEIGHT - 30);
         //mouse click
         if(this.game.input.activePointer.leftButton.isDown && !this.isToolBoxMove)
         {
-            this.drawMap(this.game.input.mousePointer);
+            //var marker = new Phaser.Point(0,0);
+            //marker.x = this.testLayer.getTileX(this.game.input.activePointer.worldX) * 16;
+            //marker.y = this.testLayer.getTileY(this.game.input.activePointer.worldY) * 16;
+
+
+            //this.map.putTile(2, this.testLayer.getTileX(marker.x), this.testLayer.getTileY(marker.y), this.testLayer);
+            //this.map.setCollisionByExclusion([0]);
+            //this.map.putTile(3,0,0,this.testLayer);
+            //this.drawMap(this.game.input.mousePointer);
+            this.drawMap(this.game.input.activePointer);
+            this.player.bringToTop();
+            this.player.drill.bringToTop();
+
             this.ToolBox.bringToTop();
             this.BtnCave.bringToTop();
             this.BtnWall.bringToTop();
             this.BtnCement.bringToTop();
-            this.player.bringToTop();
-            this.player.drill.bringToTop();
+
         }
+        // this.caveMap[0].setCollisionBetween(1, 2000, true, Demo.CaveAry[0]);
+        // this.wallMap[0].setCollisionBetween(1, 2000, true, Demo.WallAry[0]);
+        // this.cementMap[0].setCollisionBetween(1, 2000, true, Demo.CementAry[0]);
+
+        //this.game.physics.arcade.collide(this.player, this.caveLayer);
+        this.game.physics.arcade.collide(this.player, this.wallLayer);
+        this.game.physics.arcade.collide(this.player, this.cementLayer);
     },
 
     drawMap:function(mousePointer){
         //alert('hahah');
         var tileY = Math.ceil(mousePointer.x/Demo.TILE_SIZE_W) - 1;
         var tileX = Math.ceil(mousePointer.y/Demo.TILE_SIZE_H) - 1;
-        this.sceneAry[tileX][tileY] = this.DrawType;
-        if(this.sceneAry!=this.DrawType)
+        
+        //this.sceneAry[tileX][tileY] = this.DrawType;
+        if(this.sceneAry[tileX][tileY]!=this.DrawType)
         {
-            if(this.tileAry[tileX][tileY]){
-                var deSprite = this.tileAry[tileX][tileY];
-                this.createTile(tileX,tileY);
-                if (deSprite)
-                {
-                    deSprite.destroy();
+            var orginType = this.sceneAry[tileX][tileY];
+            this.sceneAry[tileX][tileY] = this.DrawType;
+            //if(this.tileAry[tileX][tileY]){
+            //    var deSprite = this.tileAry[tileX][tileY];
+            //    //this.createTile(tileX,tileY);
+            //    if (deSprite)
+            //    {
+            //        //deSprite.destroy();
+            //        this.map.removeTile(tileX,tileY,deSprite.layer);
+            //    }
+            //};
+            var deSprite = this.tileAry[tileX][tileY];
+            if(deSprite)
+            {
+                switch(orginType){
+                    case Demo.CAVE_VALUE:this.caveMap[0].removeTile(tileX,tileY,this.caveLayer);break;
+                    case Demo.WALL_VALUE:this.wallMap[0].removeTile(tileX,tileY,this.wallLayer);break;
+                    case Demo.CEMENT_VALUE:this.cementMap[0].removeTile(tileX,tileY,this.cementLayer);break;
                 }
-            }else{
-                this.createTile(tileX,tileY);
-            };
-
-
+            }
+            this.createTile(tileX,tileY);
         }
 
         this.updateTile(tileX,tileY);
@@ -134,33 +198,42 @@ Demo.construcState.prototype = {
 
     createTile:function(i,j){
         var tileSprite;
+
         switch(this.sceneAry[i][j])
         {
-            case Demo.CAVE_VALUE: 
-                    var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
-                    var tileID = (Math.ceil(Math.random() * 100)) % Demo.CaveAry.length;
-                    tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CaveAry[tileID]);
-                    tileSprite.en
-                    tileSprite.frame = tileVal;
-                    break;
-            case Demo.WALL_VALUE: 
-                    var tileVal = Demo.Helper.mathHelper.calcWallVal(i,j,this.sceneAry);
-                    var tileID = (Math.ceil(Math.random() * 100)) % Demo.WallAry.length;
-                    tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.WallAry[tileID]);
-                    tileSprite.frame = tileVal;
-                    break;
-            case Demo.CEMENT_VALUE: 
-                    var tileVal = Demo.Helper.mathHelper.calcCementVal(i,j,this.sceneAry);
-                    var tileID = (Math.ceil(Math.random() * 100)) % Demo.CementAry.length;
-                    tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CementAry[tileID])
-                    tileSprite.frame = tileVal;
-                    break;
-            default: 
-                    var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
-                    var tileID = (Math.ceil(Math.random() * 100)) % Demo.CaveAry.length;
-                    tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CaveAry[tileID]);
-                    tileSprite.frame = tileVal;
+           case Demo.CAVE_VALUE: 
+                   var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
+                   var tileID = (Math.ceil(Math.random() * 100)) % Demo.CaveAry.length;
+                   //tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CaveAry[tileID]);
+                   //tileSprite.frame = tileVal;
+                   tileSprite=this.caveMap[0].putTile(tileVal,j,i,this.caveLayer);
+
+                   break;
+           case Demo.WALL_VALUE: 
+                   var tileVal = Demo.Helper.mathHelper.calcWallVal(i,j,this.sceneAry);
+                   var tileID = (Math.ceil(Math.random() * 100)) % Demo.WallAry.length;
+                   //tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.WallAry[tileID]);
+                   //tileSprite=this.map.putTile(tileVal,this.wallLayer.getTileX(j*Demo.TILE_SIZE_W),this.wallLayer.getTileY(i*Demo.TILE_SIZE_H),this.wallLayer);
+                   //tileSprite.frame = tileVal;
+                   tileSprite=this.wallMap[0].putTile(tileVal,j,i,this.wallLayer);
+
+                   break;
+           case Demo.CEMENT_VALUE: 
+                   var tileVal = Demo.Helper.mathHelper.calcCementVal(i,j,this.sceneAry);
+                   var tileID = (Math.ceil(Math.random() * 100)) % Demo.CementAry.length;
+                   //tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CementAry[tileID])
+                   //tileSprite.frame = tileVal;
+                   tileSprite=this.cementMap[0].putTile(tileVal,j,i,this.cementLayer);
+
+                   break;
+           default: 
+                   //var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
+                   //var tileID = (Math.ceil(Math.random() * 100)) % Demo.CaveAry.length;
+                   //tileSprite = this.game.add.sprite(j*Demo.TILE_SIZE_W, i*Demo.TILE_SIZE_H, Demo.CaveAry[tileID]);
+                   //tileSprite.frame = tileVal;
+                   //tileSprite=this.map.putTile(tileVal,this.caveLayer.getTileX(j*Demo.TILE_SIZE_W),this.caveLayer.getTileX(i*Demo.TILE_SIZE_H),this.caveLayer);
         }
+
         this.tileAry[i][j] = tileSprite;
     },
 
@@ -184,7 +257,8 @@ Demo.construcState.prototype = {
             default:    tileVal = Demo.Helper.mathHelper.calcCaveVal(tileX,tileY,this.sceneAry);
         }
         if(tileVal != -1){
-            this.tileAry[tileX][tileY].frame = tileVal;
+            //this.tileAry[tileX][tileY].frame = tileVal;
+            this.tileAry[tileX][tileY].index = tileVal;
         }
         return
     },
@@ -229,6 +303,28 @@ Demo.construcState.prototype = {
     DrawTypeCement:function(){
         this.DrawType = Demo.CEMENT_VALUE ;
     },
+
+    initMap:function(mapAry,tileAry){
+        //var mapAry = new Array(tileAry.length);
+        for(var i=0;i<tileAry.length;i++)
+        {
+            //this.load.spritesheet(tileAry[i], 'assets\\tiles\\'+tileAry[i]+'.png', 16, 16, 16);
+            //this.map.addTilesetImage(tileAry[i]);
+            //map.addTilesetImage(tileAry[i],tileAry[i],Demo.TILE_SIZE_W,Demo.TILE_SIZE_H,0,0,i);
+            mapAry[i] = this.game.add.tilemap();
+            mapAry[i].addTilesetImage(tileAry[i],tileAry[i],Demo.TILE_SIZE_W,Demo.TILE_SIZE_H,0,0,i);
+        }
+        //return mapAry;
+    },
+
+    //initTileImg:function(mapAry,tileAry){
+    //    for(var i=0;i<tileAry.length;i++)
+    //    {
+    //        //this.load.spritesheet(tileAry[i], 'assets\\tiles\\'+tileAry[i]+'.png', 16, 16, 16);
+    //        //this.map.addTilesetImage(tileAry[i]);
+    //        mapAry[i].addTilesetImage(tileAry[i],tileAry[i],Demo.TILE_SIZE_W,Demo.TILE_SIZE_H,0,0,i);
+    //    }
+    //},
 
     
 }

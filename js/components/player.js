@@ -3,9 +3,9 @@ var Demo = Demo || {};
 // PLAYER CLASS //
 Demo.Player = function(game, input, x, y) {
   if (Demo.hardMode) {
-    game.player2 = Phaser.Sprite.call(this, game, x, y, 'player-speedo');
+    Phaser.Sprite.call(this, game, x, y, 'player-speedo');
   } else {
-    game.player2 = Phaser.Sprite.call(this, game, x, y, 'player');
+    Phaser.Sprite.call(this, game, x, y, 'player');
   }
   this.game = game;
   this.input = input;
@@ -120,10 +120,10 @@ Demo.Player = function(game, input, x, y) {
 
   // add to the game
   this.game.add.existing(this);
-  this.game.layers.player.add(this);
-  this.game.layers.player.add(this.drill);
-  //this.game.add.sprite(this);
-  //this.game.add.sprite(this.drill);
+  //this.game.layers.player.add(this);
+  //this.game.layers.player.add(this.drill);
+  this.game.add.sprite(this);
+  this.game.add.sprite(this.drill);
 };
 
 Demo.Player.prototype = Object.create(Phaser.Sprite.prototype);
