@@ -14,7 +14,10 @@ Demo.VOID_VALUE = -1;
 Demo.CAVE_VALUE = 0;
 Demo.WALL_VALUE = 1;
 Demo.CEMENT_VALUE = 2;
-Demo.ROCK_VALUE = 3;
+Demo.DRILL_VALUE = 3;
+Demo.SPRING_VALUE = 4;
+Demo.FRAGILE_VALUE = 5;
+Demo.TRAPS_VALUE = 6;
 
 Demo.drillEnabled = true;
 Demo.hardMode = true;

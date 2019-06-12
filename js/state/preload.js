@@ -19,8 +19,16 @@ Demo.preloadState.prototype = {
         this.load.spritesheet('player', 'assets/img/player.png', 16, 16, 16);
         this.load.spritesheet('player-speedo', 'assets/img/player-speedo.png', 16, 16, 16);
         this.load.spritesheet('drill', 'assets/img/drill.png', 16, 8);
+        this.load.spritesheet('other', 'assets/tiles/other.png', 16, 16,16);
+
+        Demo.TILEINDEX_DRILL = 12
+        Demo.TILEINDEX_FRAGILE = 13
+        Demo.TILEINDEX_TRAPS = 14
+        Demo.TILEINDEX_SPRING = 15
+
         this.load.spritesheet('battery', 'assets/img/battery.png', 36, 16);
         this.load.image('infinite-battery', 'assets/img/infinite-battery.png');
+        this.load.image('particle', 'assets/img/particle.png');
         // load tilemaps
         
         this.load.tilemap('menu', 'assets/tilemaps/menu.json', null, Phaser.Tilemap.TILED_JSON);
