@@ -4,13 +4,7 @@ Demo.construcState = function(){};
 
 Demo.construcState.prototype = {
     create: function(){
-            // actor/fx rendering layers
-        this.game.layers = {
-            player: this.game.add.group(),
-            foreground: this.game.add.group(),
-            effects: this.game.add.group(), // bullets and dust
-            ui: this.game.add.group(), 
-        };
+
 
         // init sfx
         this.playerDieSound = this.add.audio('player_die');
@@ -31,16 +25,7 @@ Demo.construcState.prototype = {
         this.blipSound = this.game.add.audio('blip');
         this.blipSound.volume -= 0.6;
 
-        // make lava splash emitter (for player deaths)
-        this.lavaSplash = this.game.add.emitter(0, 0, 200);
-        this.lavaSplash.makeParticles('particle');
-        this.lavaSplash.minRotation = 0;
-        this.lavaSplash.maxRotation = 0;
-        this.lavaSplash.minParticleScale = 0.3;
-        this.lavaSplash.maxParticleScale = 1.5;
-        this.lavaSplash.setYSpeed(-280, -150);
-        this.lavaSplash.gravity = 500;
-        this.game.layers.foreground.add(this.lavaSplash);
+
         //this.game.add(this.lavaSplash);
         //init map set;
         this.caveMap = new Array(Demo.CaveAry.length);
@@ -81,7 +66,24 @@ Demo.construcState.prototype = {
         this.fragileMap.setCollisionBetween(0, 2000, true, "other");
         this.trapsMap.setCollisionBetween(0, 2000, true, "other");
         
+        // actor/fx rendering layers
+        this.game.layers = {
+            player: this.game.add.group(),
+            foreground: this.game.add.group(),
+            effects: this.game.add.group(), // bullets and dust
+            ui: this.game.add.group(), 
+        };
 
+        // make lava splash emitter (for player deaths)
+        this.lavaSplash = this.game.add.emitter(0, 0, 200);
+        this.lavaSplash.makeParticles('particle');
+        this.lavaSplash.minRotation = 0;
+        this.lavaSplash.maxRotation = 0;
+        this.lavaSplash.minParticleScale = 0.3;
+        this.lavaSplash.maxParticleScale = 1.5;
+        this.lavaSplash.setYSpeed(-280, -150);
+        this.lavaSplash.gravity = 500;
+        this.game.layers.foreground.add(this.lavaSplash);
 
         //create player
         this.input = new Demo.Input(this.game);
@@ -517,8 +519,6 @@ Demo.construcState.prototype.playerTrapHandler = function(player, trap) {
   
       // shake the camera
     this.game.camera.shake(0.004, 1200);
-    // shake the camera
-    //this.game.camera.shake(0.004, 1200);
     //this.game.camera.onShakeComplete.addOnce(function() {
     //  // restart level after camera shake
     //  this.game.camera.fade(0x000000, 250);
