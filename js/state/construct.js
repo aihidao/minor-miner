@@ -74,6 +74,30 @@ Demo.construcState.prototype = {
             ui: this.game.add.group(), 
         };
 
+            // create block dust effects
+        this.blockDust = this.game.add.group();
+        this.game.layers.effects.add(this.blockDust); // add to rendering layer
+        var i;
+        for (i = 0; i < 250; i++) {
+            var dust = this.game.add.sprite(0, 0, 'block-dust');
+            dust.animations.add('burst');
+            dust.kill();
+            this.blockDust.add(dust);
+        }
+
+            // create drill burst effects
+        this.drillBurstGroup = this.game.add.group();
+        this.game.layers.effects.add(this.drillBurstGroup);
+        for (i = 0; i < 500; i++) {
+            var burst = this.game.add.sprite(0, 0, 'drill-particle');
+            this.game.physics.arcade.enable(burst);
+            // scale up
+            burst.scale.set(1.5);
+            burst.lifespan = 200;
+            burst.kill();
+            this.drillBurstGroup.add(burst);
+        }
+
         // make lava splash emitter (for player deaths)
         this.lavaSplash = this.game.add.emitter(0, 0, 200);
         this.lavaSplash.makeParticles('particle');
@@ -535,6 +559,10 @@ Demo.construcState.prototype.playerFragileHandler = function(player, block) {
         if (!this.breakBlockSound.isPlaying) {
             this.breakBlockSound.play();
         }
+        // make block dust
+        var dust = this.blockDust.getFirstDead();
+        dust.reset(block.worldX, block.worldY);
+        dust.animations.play('burst', 20, false, true);
 
         var index = block.index;
         this.fragileMap.removeTile(block.x, block.y, this.fragileLayer);
@@ -561,14 +589,34 @@ Demo.construcState.prototype.drillBlockHandler = function(player, block) {
       this.breakBlockSound.play();
     }
     // make block dust
-    //var dust = this.blockDust.getFirstDead();
-    //dust.reset(block.worldX, block.worldY);
-    //dust.animations.play('burst', 20, false, true);
-    // make drill particle effect
-    //this.drillBurst(block.worldX + block.width / 2, block.worldY + block.height / 2);
+    var dust = this.blockDust.getFirstDead();
+    dust.reset(block.worldX, block.worldY);
+    dust.animations.play('burst', 20, false, true);
+    //make drill particle effect
+    this.drillBurst(block.worldX + block.width / 2, block.worldY + block.height / 2);
     // remove block
     this.drillMap.removeTile(block.x, block.y, this.drillLayer);
 };
+
+
+// shoot a radius of drill particles
+Demo.construcState.prototype.drillBurst = function(x, y) {
+    // play sound
+    if (this.game.time.time > this.drillBurstSoundClock + 50) {
+      this.drillBurstSound.play();
+      this.drillBurstSoundClock = this.game.time.time;
+    }
+    for (var i = 0; i < 8; i++) {
+        var part = this.drillBurstGroup.getFirstDead();
+        // revive and position
+        part.revive();
+        part.reset(x, y);
+        // shoot out
+        this.game.physics.arcade.velocityFromAngle(i*45, 300, part.body.velocity);
+        part.angle = i*45;
+        part.lifespan = 150;
+    }
+  };
 
 Demo.construcState.prototype.playerSpringHandler = function(player, block) {
     // player has to hit from the top of the block

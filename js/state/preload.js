@@ -16,10 +16,13 @@ Demo.preloadState.prototype = {
         this.load.spritesheet('Wall4', 'assets/tiles/Wall1.bmp', 16, 16,16);
 
         this.load.spritesheet('dust', 'assets/img/dust.png', 8, 8);
+
         this.load.spritesheet('player', 'assets/img/player.png', 16, 16, 16);
         this.load.spritesheet('player-speedo', 'assets/img/player-speedo.png', 16, 16, 16);
         this.load.spritesheet('drill', 'assets/img/drill.png', 16, 8);
+        this.load.image('drill-particle', 'assets/img/drill-particle.png');
         this.load.spritesheet('other', 'assets/tiles/other.png', 16, 16,16);
+        this.load.spritesheet('block-dust', 'assets/img/block-dust.png', 16, 16);
 
         Demo.TILEINDEX_DRILL = 12
         Demo.TILEINDEX_FRAGILE = 13
