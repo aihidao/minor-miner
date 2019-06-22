@@ -28,6 +28,9 @@ Demo.preloadState.prototype = {
         Demo.TILEINDEX_FRAGILE = 13
         Demo.TILEINDEX_TRAPS = 14
         Demo.TILEINDEX_SPRING = 15
+        Demo.TILEINDEX_LAVA = 4
+        //d is directed
+        Demo.TILEINDEX_D_TRAP = 2
 
         this.load.spritesheet('battery', 'assets/img/battery.png', 36, 16);
         this.load.image('infinite-battery', 'assets/img/infinite-battery.png');

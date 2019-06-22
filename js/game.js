@@ -18,6 +18,8 @@ Demo.DRILL_VALUE = 3;
 Demo.SPRING_VALUE = 4;
 Demo.FRAGILE_VALUE = 5;
 Demo.TRAPS_VALUE = 6;
+Demo.LAVA_VALUE = 7;
+Demo.D_TRAPS_VALUE = 8;
 
 Demo.drillEnabled = true;
 Demo.hardMode = true;

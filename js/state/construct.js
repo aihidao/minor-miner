@@ -171,9 +171,9 @@ Demo.construcState.prototype = {
         this.ToolBox.events.onDragStop.add(this.ToolBoxMoveStop,this);
 
         var ButtonScale = 2
-        this.btnAry = [this.BtnCave,this.BtnWall,this.BtnCave,this.BtuDrill,this.BtuSpring,this.BtuFragile,this.BtuTraps];
-        var btnSprite = [Demo.CaveAry[0], Demo.WallAry[0], Demo.CementAry[0], "other","other","other","other"];
-        var btnfunction = [this.DrawTypeCave, this.DrawTypeWall,this.DrawTypeCement,this.DrawTypeDrill,this.DrawTypeSpring,this.DrawTypeFragile,this.DrawTypeTraps];
+        this.btnAry = [this.BtnCave,this.BtnWall,this.BtnCave,this.BtuDrill,this.BtuSpring,this.BtuFragile,this.BtuTraps,this.BtuLava,this.BtuDTraps];
+        var btnSprite = [Demo.CaveAry[0], Demo.WallAry[0], Demo.CementAry[0], "other","other","other","other","other","other"];
+        var btnfunction = [this.DrawTypeCave, this.DrawTypeWall,this.DrawTypeCement,this.DrawTypeDrill,this.DrawTypeSpring,this.DrawTypeFragile,this.DrawTypeTraps,this.DrawTypeLava,this.DrawTypeDTraps];
 
         for(var i=0;i<this.btnAry.length;i++)
         {
@@ -203,8 +203,17 @@ Demo.construcState.prototype = {
                         normIndex=14;
                         overIndex=14;
                         break;
+                case Demo.LAVA_VALUE:
+                    normIndex=Demo.TILEINDEX_LAVA;
+                    overIndex=Demo.TILEINDEX_LAVA;
+                    break;
+                case Demo.D_TRAPS_VALUE:
+                    normIndex=Demo.TILEINDEX_D_TRAP;
+                    overIndex=Demo.TILEINDEX_D_TRAP;
+                    break;                       
             }
             this.btnAry[i] = this.game.add.button(this.BoxPosition.x + 20 + (i%3) * 40,this.BoxPosition.y + 40 * (((i-i%3)/3)+1), btnSprite[i], btnfunction[i], this, normIndex, normIndex, overIndex);
+            //this.btnAry[i] = this.game.add.button(this.BoxPosition.x + 20 + (i%3) * 40,this.BoxPosition.y + 40 * (((i-i%3)/3)+1), btnSprite[i], function(){this.DrawType = i;}, this, normIndex, normIndex, overIndex);
             this.btnAry[i].anchor.setTo(0.5, 0.5);
             this.btnAry[i].scale.setTo(ButtonScale,ButtonScale)
         }
@@ -251,6 +260,16 @@ Demo.construcState.prototype = {
         {
             return ;
         }
+
+        if(this.DrawType == Demo.D_TRAPS_VALUE)
+        {
+            var tileVal2 = Demo.Helper.mathHelper.calcDTrapsVal(tileY,tileX,this.sceneAry);
+            alert(tileVal2);
+            if(tileVal2 == -1)
+            {
+                return;
+            }
+        }
         
         //this.sceneAry[tileX][tileY] = this.DrawType;
         if(this.sceneAry[tileX][tileY]!=this.DrawType)
@@ -281,6 +300,15 @@ Demo.construcState.prototype = {
                                             this.caveMap[0].removeTile(tileY,tileX,this.caveLayer);
                                             this.trapsMap.removeTile(tileY,tileX,this.trapsLayer);
                                             break;
+                    case Demo.LAVA_VALUE:
+                                            this.caveMap[0].removeTile(tileY,tileX,this.caveLayer);
+                                            this.trapsMap.removeTile(tileY,tileX,this.trapsLayer);
+                                            break;
+                    case Demo.D_TRAPS_VALUE:
+
+                                            this.caveMap[0].removeTile(tileY,tileX,this.caveLayer);
+                                            this.trapsMap.removeTile(tileY,tileX,this.trapsLayer);
+                                            break;                                                                                            
                 }
             }
             this.createTile(tileX,tileY);
@@ -357,7 +385,24 @@ Demo.construcState.prototype = {
                     this.caveMap[0].putTile(tileVal,j,i,this.caveLayer);
                     tileSprite=this.trapsMap.putTile(Demo.TILEINDEX_TRAPS,j,i,this.trapsLayer);
                     break;  
-
+            case Demo.LAVA_VALUE: 
+                    var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
+                    var tileID = (Math.ceil(Math.random() * 100)) % 4;
+                    this.caveMap[0].putTile(tileVal,j,i,this.caveLayer);
+                    tileSprite=this.trapsMap.putTile(4 + tileID,j,i,this.trapsLayer);
+                    break;                      
+            case Demo.D_TRAPS_VALUE:
+                    var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
+                    var tileVal2 = Demo.Helper.mathHelper.calcDTrapsVal(i,j,this.sceneAry);
+                    if(tileVal2 == -1)
+                    {
+                        //alert();
+                       return;
+                    }
+                    //var tileID = (Math.ceil(Math.random() * 100)) % 4;
+                    this.caveMap[0].putTile(tileVal,j,i,this.caveLayer);
+                    tileSprite=this.trapsMap.putTile(tileVal2,j,i,this.trapsLayer);
+                    break;   
            default: 
                    //var tileVal = Demo.Helper.mathHelper.calcCaveVal(i,j,this.sceneAry);
                    //var tileID = (Math.ceil(Math.random() * 100)) % Demo.CaveAry.length;
@@ -458,6 +503,14 @@ Demo.construcState.prototype = {
 
     DrawTypeTraps:function(){
         this.DrawType = Demo.TRAPS_VALUE ;
+    },
+
+    DrawTypeLava:function(){
+        this.DrawType = Demo.LAVA_VALUE ;
+    },
+
+    DrawTypeDTraps:function(){
+        this.DrawType = Demo.D_TRAPS_VALUE ;
     },
 
     initMap:function(mapAry,tileAry){

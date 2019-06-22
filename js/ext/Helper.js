@@ -36,19 +36,19 @@ Demo.Helper.mathHelper = {
             return -1;
         }
         var value = 0;
-        if(posX > 0 && aryVal[posX-1][posY]==2)
+        if(posX > 0 && aryVal[posX-1][posY]==2 || posX == 0)
         {
             value+=1;
         }
-        if(posY < Demo.TILE_COL_NUM - 1 && aryVal[posX][posY+1]==2)
+        if(posY < Demo.TILE_COL_NUM - 1 && aryVal[posX][posY+1]==2 || posY == Demo.TILE_COL_NUM - 1)
         {
             value+=2;
         }
-        if(posX < Demo.TILE_ROW_NUM - 1 && aryVal[posX+1][posY]==2)
+        if(posX < Demo.TILE_ROW_NUM - 1 && aryVal[posX+1][posY]==2 || posX == Demo.TILE_ROW_NUM - 1)
         {
             value+=4;
         }
-        if(posY > 0 && aryVal[posX][posY-1]==2)
+        if(posY > 0 && aryVal[posX][posY-1]==2 || posY == 0) 
         {
             value+=8;
         }
@@ -61,7 +61,7 @@ Demo.Helper.mathHelper = {
             return -1;
         }
         var value = 0;
-        if(posX > 0 && aryVal[posX-1][posY]==1 ||posX > 0 == 0)
+        if(posX > 0 && aryVal[posX-1][posY]==1 ||posX == 0)
         {
             value+=1;
         }
@@ -78,5 +78,50 @@ Demo.Helper.mathHelper = {
             value+=8;
         }
         return value;
-    }
+    },
+    calcLavaVal:function(posX,posY,aryVal){
+        if(posX<0 ||posX > Demo.TILE_ROW_NUM - 1||posY < 0 || posY > Demo.TILE_COL_NUM - 1 )
+        {
+            return -1;
+        }
+        var value = 0;
+        if(posX > 0 && aryVal[posX-1][posY]==1 ||posX == 0)
+        {
+            value = 0;
+        }
+
+        if(posX < Demo.TILE_ROW_NUM - 1 && aryVal[posX+1][posY]==1 || posX == Demo.TILE_ROW_NUM - 1)
+        {
+            value+=4;
+        }
+
+    },
+    calcDTrapsVal:function(posX,posY,aryVal){
+        if(posX<0 ||posX > Demo.TILE_ROW_NUM - 1||posY < 0 || posY > Demo.TILE_COL_NUM - 1 )
+        {
+            return -1;
+        }
+        var value = -1;
+        alert(aryVal[posX][posY-1]);
+        if(posY == 0 && aryVal[posX][posY-1]==1)
+        {
+            value = 1;
+        }
+        alert(aryVal[posX+1][posY]);
+
+        if(posY+1 == Demo.TILE_COL_NUM - 1 && aryVal[posX][posY+1]==1)
+        {
+            value = 3;
+        }
+        alert(aryVal[posX-1][posY]);
+
+        if(posX == 0 && aryVal[posX-1][posY]==1){
+            value = 0;
+        }
+        alert(aryVal[posX+1][posY]);
+        if(posX+1 == Demo.TILE_ROW_NUM - 1 && aryVal[posX+1][posY]==1){
+            value = 2;
+        }
+        return value;
+    },
 }
