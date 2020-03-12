@@ -8,4 +8,7 @@
 
 不过因为这个项目已经有几个人fork了，所以我将自己修改的部分，上传了上来，如果原作者不同意这么做，我将删除我的代码。
 
-你可以上作者的github上体验这款游戏: [Minor_Miner](https://ramorris3.github.io/minor-miner)
+这个是我的建造模式测试地址，目前没有完善，地图编辑器基本都已实现，可以测试。后续等有空再完善把，太耗时间了。
+[minor-miner-construct](https://aihidao.github.io/minor-miner)
+
+你可以上作者的github上体验这款游戏得原版: [Minor_Miner](https://ramorris3.github.io/minor-miner)
